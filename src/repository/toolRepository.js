@@ -10,7 +10,8 @@ const toolSchema = new mongoose.Schema({
   description_es: { type: String },
   logoBase64:     { type: String },
   officialUrl:    { type: String },
-  pricingModel:   { type: String }
+  pricingModel:   { type: String },
+  categories:     [{ type: String }]
 }, { collection: 'tools' });
 
 const Tool = mongoose.models.Tool || mongoose.model('Tool', toolSchema);
@@ -34,6 +35,30 @@ async function getAllTools() {
   ).lean();
 }
 
+async function getToolsByCategories(categories, page = 1, pageSize = 20) {
+  await init();
+  const skip = (page - 1) * pageSize;
+  return Tool.find(
+    { categories: { $in: categories } },
+    { _id:0, slug:1, name:1, description_en:1, description_pt:1, description_es:1 }
+  ).skip(skip).limit(pageSize).lean();
+}
+
+async function getAllCategories(page = 1, pageSize = 20) {
+  await init();
+  const skip = (page - 1) * pageSize;
+  const pipeline = [
+    { $unwind: '$categories' },
+    { $group: { _id: '$categories' } },
+    { $sort: { _id: 1 } },
+    { $skip: skip },
+    { $limit: pageSize },
+    { $project: { _id: 0, category: '$_id' } }
+  ];
+  const results = await Tool.aggregate(pipeline);
+  return results.map(r => r.category);
+}
+
 // Novo método: coleção nativa para agregação
 async function getNativeCollection() {
   await init();
@@ -43,6 +68,8 @@ async function getNativeCollection() {
 module.exports = {
   init,
   getAllTools,
+  getToolsByCategories,
+  getAllCategories,
   getToolCollection: () => Tool,
   getNativeCollection
 };
