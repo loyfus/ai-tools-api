@@ -1,9 +1,9 @@
 const express = require('express');
-const { listCategories, listToolsByCategory } = require('../controllers/categoryController');
+const { listCategories, listToolsByCategories } = require('../controllers/categoryController');
 
 const router = express.Router();
 
 router.get('/', listCategories);
-router.get('/:category/tools', listToolsByCategory);
+router.get('/tools', listToolsByCategories);
 
 module.exports = router;
