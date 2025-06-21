@@ -5,6 +5,7 @@ const helmet  = require('helmet');
 const morgan  = require('morgan');
 const { port } = require('./config');
 const searchRoutes = require('./routes/searchRoutes');
+const categoryRoutes = require('./routes/categoryRoutes');
 
 const app = express();
 
@@ -16,6 +17,7 @@ app.use(morgan('tiny'));
 
 // Rotas
 app.use('/api/search', searchRoutes);
+app.use('/api/categories', categoryRoutes);
 
 // Tratamento de erros
 app.use((err, req, res, next) => {
