@@ -35,6 +35,25 @@ async function getAllTools() {
   ).lean();
 }
 
+async function getToolBySlug(slug) {
+  await init();
+  return Tool.findOne(
+    { slug },
+    {
+      _id:           0,
+      slug:          1,
+      name:          1,
+      description_en:1,
+      description_pt:1,
+      description_es:1,
+      logoBase64:    1,
+      officialUrl:   1,
+      pricingModel:  1,
+      categories:    1
+    }
+  ).lean();
+}
+
 async function getToolsByCategories(categories, page = 1, pageSize = 20) {
   await init();
   const skip = (page - 1) * pageSize;
@@ -68,6 +87,7 @@ async function getNativeCollection() {
 module.exports = {
   init,
   getAllTools,
+  getToolBySlug,
   getToolsByCategories,
   getAllCategories,
   getToolCollection: () => Tool,
