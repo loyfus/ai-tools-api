@@ -1,4 +1,13 @@
-const { getToolBySlug } = require('../repository/toolRepository');
+const { getAllTools, getToolBySlug } = require('../repository/toolRepository');
+
+async function listAllTools(req, res, next) {
+  try {
+    const tools = await getAllTools();
+    res.json(tools);
+  } catch (err) {
+    next(err);
+  }
+}
 
 async function getToolDetail(req, res, next) {
   try {
@@ -18,4 +27,4 @@ async function getToolDetail(req, res, next) {
   }
 }
 
-module.exports = { getToolDetail };
+module.exports = { listAllTools, getToolDetail };
