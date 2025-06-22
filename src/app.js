@@ -7,6 +7,7 @@ const rateLimit = require('express-rate-limit');
 const mongoSanitize = require('express-mongo-sanitize');
 const hpp = require('hpp');
 const xss = require('xss-clean');
+const compression = require('compression');
 const { port } = require('./config');
 const searchRoutes = require('./routes/searchRoutes');
 const categoryRoutes = require('./routes/categoryRoutes');
@@ -29,6 +30,7 @@ app.use(mongoSanitize());
 app.use(hpp());
 app.use(xss());
 app.use(morgan('tiny'));
+app.use(compression());
 
 // Rotas
 app.get('/', (req, res) => {
