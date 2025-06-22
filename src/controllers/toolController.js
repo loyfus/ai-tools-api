@@ -1,0 +1,30 @@
+const { getAllTools, getToolBySlug } = require('../repository/toolRepository');
+
+async function listAllTools(req, res, next) {
+  try {
+    const tools = await getAllTools();
+    res.json(tools);
+  } catch (err) {
+    next(err);
+  }
+}
+
+async function getToolDetail(req, res, next) {
+  try {
+    const { slug } = req.params;
+    if (!slug) {
+      return res.status(400).json({ error: 'Slug é obrigatório.' });
+    }
+
+    const tool = await getToolBySlug(slug);
+    if (!tool) {
+      return res.status(404).json({ error: 'Ferramenta não encontrada.' });
+    }
+
+    res.json(tool);
+  } catch (err) {
+    next(err);
+  }
+}
+
+module.exports = { listAllTools, getToolDetail };

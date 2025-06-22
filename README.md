@@ -52,5 +52,3 @@ Returns a JSON object containing the executed query, pagination data and a list 
   ]
 }
 ```
-
-
