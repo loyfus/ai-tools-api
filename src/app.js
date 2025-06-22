@@ -3,6 +3,10 @@ const express = require('express');
 const cors    = require('cors');
 const helmet  = require('helmet');
 const morgan  = require('morgan');
+const rateLimit = require('express-rate-limit');
+const mongoSanitize = require('express-mongo-sanitize');
+const hpp = require('hpp');
+const xss = require('xss-clean');
 const { port } = require('./config');
 const searchRoutes = require('./routes/searchRoutes');
 const categoryRoutes = require('./routes/categoryRoutes');
@@ -10,10 +14,20 @@ const toolRoutes = require('./routes/toolRoutes');
 
 const app = express();
 
+// Rate Limiter
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100                  // limit each IP to 100 requests per window
+});
+
 // Middlewares
+app.use(limiter); // Protect against DDoS/brute force
 app.use(helmet());
 app.use(cors());
-app.use(express.json());
+app.use(express.json({ limit: '10kb' }));
+app.use(mongoSanitize());
+app.use(hpp());
+app.use(xss());
 app.use(morgan('tiny'));
 
 // Rotas
