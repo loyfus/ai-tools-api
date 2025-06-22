@@ -17,9 +17,12 @@ app.use(express.json());
 app.use(morgan('tiny'));
 
 // Rotas
-app.use('/api/search', searchRoutes);
-app.use('/api/categories', categoryRoutes);
-app.use('/api/tools', toolRoutes);
+app.get('/', (req, res) => {
+  res.json({ message: 'Loyfus API online' });
+});
+app.use('/search', searchRoutes);
+app.use('/categories', categoryRoutes);
+app.use('/tools', toolRoutes);
 
 // Tratamento de erros
 app.use((err, req, res, next) => {
