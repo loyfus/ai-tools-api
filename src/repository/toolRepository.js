@@ -60,7 +60,11 @@ async function getToolsByCategories(categories, page = 1, pageSize = 20) {
   return Tool.find(
     { categories: { $in: categories } },
     { _id:0, slug:1, name:1, description_en:1, description_pt:1, description_es:1 }
-  ).skip(skip).limit(pageSize).lean();
+  )
+    .hint({ categories: 1 })
+    .skip(skip)
+    .limit(pageSize)
+    .lean();
 }
 
 async function getAllCategories(page = 1, pageSize = 20) {
@@ -74,7 +78,7 @@ async function getAllCategories(page = 1, pageSize = 20) {
     { $limit: pageSize },
     { $project: { _id: 0, category: '$_id' } }
   ];
-  const results = await Tool.aggregate(pipeline);
+  const results = await Tool.aggregate(pipeline, { hint: { categories: 1 } });
   return results.map(r => r.category);
 }
 
