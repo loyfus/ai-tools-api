@@ -18,7 +18,6 @@ async function runAtlasSearch(query, page = 1, pageSize = cfgSearch.topK) {
         }
       }
     },
-    { $sort: { score: -1 } }
   ];
 
   const pipeline = [
