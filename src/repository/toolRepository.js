@@ -14,6 +14,9 @@ const toolSchema = new mongoose.Schema({
   categories:     [{ type: String }]
 }, { collection: 'tools' });
 
+// Add index to optimize category queries
+toolSchema.index({ categories: 1 });
+
 const Tool = mongoose.models.Tool || mongoose.model('Tool', toolSchema);
 
 let isConnected = false;
@@ -24,6 +27,8 @@ async function init() {
     useUnifiedTopology: true,
     dbName:             mongo.dbName
   });
+  // Ensure indexes are created in the database
+  await Tool.syncIndexes();
   isConnected = true;
 }
 
