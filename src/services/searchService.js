@@ -26,6 +26,9 @@ async function runAtlasSearch(query, page = 1, pageSize = cfgSearch.topK) {
         _id:           0,
         slug:          1,
         name:          1,
+        description_en: 1,
+        description_pt: 1,
+        description_es: 1,
         logoBase64:    1,            // inclui o ícone
         score:         { $meta: 'searchScore' }
       }
