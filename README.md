@@ -54,3 +54,30 @@ Returns a JSON object containing the executed query, pagination data and a list 
     ]
   }
 ```
+
+### `GET /tools`
+
+Lists all tools with pagination.
+
+**Query Parameters**
+
+- `page` – result page number (default `1`)
+- `pageSize` – number of tools per page (default `20`, max `50`)
+
+**Response**
+
+Returns a JSON object with the requested page of tools.
+
+```json
+{
+  "page": 1,
+  "pageSize": 20,
+  "tools": [
+    {
+      "slug": "tool-slug",
+      "name": "Tool Name",
+      "description_en": "English desc"
+    }
+  ]
+}
+```

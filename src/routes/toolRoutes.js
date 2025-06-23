@@ -6,6 +6,9 @@ const router = express.Router();
 /**
  * GET /tools
  * Lista todas as ferramentas
+ * Query params:
+ *   - page: número da página (opcional)
+ *   - pageSize: itens por página (opcional)
  */
 router.get('/', listAllTools);
 
