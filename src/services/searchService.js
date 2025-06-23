@@ -21,32 +21,34 @@ async function runAtlasSearch(query, page = 1, pageSize = cfgSearch.topK) {
     { $sort: { score: -1 } }
   ];
 
-  const resultPipeline = [
+  const pipeline = [
     ...baseStages,
-    { $skip: skip },
-    { $limit: pageSize },
     {
-      $project: {
-        _id: 0,
-        slug: 1,
-        name: 1,
-        description_en: 1,
-        description_pt: 1,
-        description_es: 1,
-        logoBase64: 1,
-        score: { $meta: 'searchScore' }
+      $facet: {
+        metadata: [ { $count: 'total' } ],
+        results: [
+          { $skip: skip },
+          { $limit: pageSize },
+          {
+            $project: {
+              _id: 0,
+              slug: 1,
+              name: 1,
+              description_en: 1,
+              description_pt: 1,
+              description_es: 1,
+              logoBase64: 1,
+              score: { $meta: 'searchScore' }
+            }
+          }
+        ]
       }
     }
   ];
 
-  const countPipeline = [
-    ...baseStages,
-    { $count: 'total' }
-  ];
-
-  const [countResult] = await coll.aggregate(countPipeline).toArray();
-  const total = countResult ? countResult.total : 0;
-  const results = await coll.aggregate(resultPipeline).toArray();
+  const [facetResult] = await coll.aggregate(pipeline).toArray();
+  const total = facetResult.metadata[0] ? facetResult.metadata[0].total : 0;
+  const results = facetResult.results;
 
   return { total, results };
 }
