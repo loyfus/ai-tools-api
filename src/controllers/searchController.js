@@ -18,11 +18,12 @@ async function searchTools(req, res, next) {
       }
     }
 
-    const results = await runAtlasSearch(q, pg, size);
+    const { total, results } = await runAtlasSearch(q, pg, size);
     res.json({
       query:     q,
       page:      pg,
       pageSize:  size,
+      total,
       results
     });
   } catch (err) {
