@@ -32,12 +32,16 @@ async function init() {
   isConnected = true;
 }
 
-async function getAllTools() {
+async function getAllTools(page = 1, pageSize = 20) {
   await init();
+  const skip = (page - 1) * pageSize;
   return Tool.find(
     {},
     { _id:0, slug:1, name:1, description_en:1, description_pt:1, description_es:1 }
-  ).lean();
+  )
+    .skip(skip)
+    .limit(pageSize)
+    .lean();
 }
 
 async function getToolBySlug(slug) {
