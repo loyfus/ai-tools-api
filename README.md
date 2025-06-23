@@ -35,14 +35,14 @@ Searches the tools collection using MongoDB Atlas Search.
 
 **Response**
 
-Returns a JSON object containing the executed query, pagination data and a list of tool results ordered by relevance.
-Each result now includes the available description fields (`description_pt`, `description_en`, and `description_es`).
+Returns a JSON object containing the executed query, pagination data and a list of tool results ordered by relevance. The response also includes the total number of matching tools so clients can paginate easily. Each result now includes the available description fields (`description_pt`, `description_en`, and `description_es`).
 
 ```json
 {
   "query": "example",
   "page": 1,
   "pageSize": 5,
+  "total": 42,
   "results": [
     {
       "slug": "tool-slug",

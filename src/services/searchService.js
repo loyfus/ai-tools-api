@@ -6,7 +6,7 @@ async function runAtlasSearch(query, page = 1, pageSize = cfgSearch.topK) {
   const coll = await getNativeCollection();
   const skip = (page - 1) * pageSize;
 
-  const pipeline = [
+  const baseStages = [
     {
       $search: {
         index: cfgSearch.indexName,
@@ -18,24 +18,37 @@ async function runAtlasSearch(query, page = 1, pageSize = cfgSearch.topK) {
         }
       }
     },
-    { $sort:  { score: -1 } },       // ordena antes de paginar
-    { $skip:  skip },                // pula (page-1)*pageSize documentos
-    { $limit: pageSize },            // pega pageSize documentos
+    { $sort: { score: -1 } }
+  ];
+
+  const resultPipeline = [
+    ...baseStages,
+    { $skip: skip },
+    { $limit: pageSize },
     {
       $project: {
-        _id:           0,
-        slug:          1,
-        name:          1,
+        _id: 0,
+        slug: 1,
+        name: 1,
         description_en: 1,
         description_pt: 1,
         description_es: 1,
-        logoBase64:    1,            // inclui o ícone
-        score:         { $meta: 'searchScore' }
+        logoBase64: 1,
+        score: { $meta: 'searchScore' }
       }
     }
   ];
 
-  return coll.aggregate(pipeline).toArray();
+  const countPipeline = [
+    ...baseStages,
+    { $count: 'total' }
+  ];
+
+  const [countResult] = await coll.aggregate(countPipeline).toArray();
+  const total = countResult ? countResult.total : 0;
+  const results = await coll.aggregate(resultPipeline).toArray();
+
+  return { total, results };
 }
 
 module.exports = { runAtlasSearch };
