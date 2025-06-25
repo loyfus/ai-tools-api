@@ -36,7 +36,7 @@ async function runAtlasSearch(query, page = 1, pageSize = cfgSearch.topK) {
               description_en: 1,
               description_pt: 1,
               description_es: 1,
-              logoBase64: 1,
+              // logoBase64: 1,
               score: { $meta: 'searchScore' }
             }
           }
