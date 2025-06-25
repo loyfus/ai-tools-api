@@ -14,7 +14,8 @@ const toolSchema = new mongoose.Schema({
   categories:     [{ type: String }]
 }, { collection: 'tools' });
 
-// Add index to optimize category queries
+// Indexes to optimize common queries
+toolSchema.index({ slug: 1 }, { unique: true });
 toolSchema.index({ categories: 1 });
 
 const Tool = mongoose.models.Tool || mongoose.model('Tool', toolSchema);
@@ -39,6 +40,8 @@ async function getAllTools(page = 1, pageSize = 20) {
     {},
     { _id:0, slug:1, name:1, description_en:1, description_pt:1, description_es:1 }
   )
+    .sort({ slug: 1 })
+    .hint({ slug: 1 })
     .skip(skip)
     .limit(pageSize)
     .lean();
@@ -60,7 +63,9 @@ async function getToolBySlug(slug) {
       pricingModel:  1,
       categories:    1
     }
-  ).lean();
+  )
+    .hint({ slug: 1 })
+    .lean();
 }
 
 async function getToolsByCategories(categories, page = 1, pageSize = 20) {
@@ -71,6 +76,8 @@ async function getToolsByCategories(categories, page = 1, pageSize = 20) {
     { _id:0, slug:1, name:1, description_en:1, description_pt:1, description_es:1 }
   )
     .hint({ categories: 1 })
+    .sort({ slug: 1 })
+    .hint({ slug: 1 })
     .skip(skip)
     .limit(pageSize)
     .lean();
