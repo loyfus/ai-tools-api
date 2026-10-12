@@ -11,6 +11,10 @@ sem carregar o catálogo para a memória do processo.
 
 Demo: [ia-back-nu.vercel.app](https://ia-back-nu.vercel.app)
 
+> **Contexto.** Projeto de estudo — não está em produção. O catálogo é real (coletado do
+> FutureTools pelo [ai-crawler](https://github.com/loyfus/ai-crawler)); o foco aqui é a
+> camada de busca, o ranqueamento e a superfície HTTP.
+
 ## O problema
 
 Catálogo de ferramenta de IA está espalhado: cada site tem busca própria, quase
@@ -18,7 +22,7 @@ nenhum tem busca em português, e o resultado muda conforme o dia. Guardar tudo 
 um banco e deixar o MongoDB ranquear tira a busca do caminho crítico — a API
 responde em *top K* sem varrer a coleção.
 
-Quem popula esse banco é o [AI-Crowler](https://github.com/loyfus/AI-Crowler),
+Quem popula esse banco é o [ai-crawler](https://github.com/loyfus/ai-crawler),
 que raspa o FutureTools e traduz cada descrição para os três idiomas.
 
 ## O que faz
